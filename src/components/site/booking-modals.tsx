@@ -66,7 +66,7 @@ function NewAppointmentForm({ onClose }: { onClose: () => void }) {
   return (
     <form onSubmit={submit} className="grid gap-4">
       <div className="rounded-2xl border border-sage/30 bg-sage/10 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
-        Fill in a few details and we&apos;ll open WhatsApp with a ready message for
+        Fill in a few details and I&apos;ll open WhatsApp with a ready message for
         Dr. Arpita&apos;s team. You can review and send it in one tap.
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -149,7 +149,7 @@ function FollowUpForm({ onClose }: { onClose: () => void }) {
   return (
     <form onSubmit={submit} className="grid gap-4">
       <div className="rounded-2xl border border-sage/30 bg-sage/10 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
-        Welcome back. Share a few details and we&apos;ll continue the conversation
+        Welcome back. Share a few details and I&apos;ll continue the conversation
         on WhatsApp.
       </div>
       <Field label="Patient Name" required>
@@ -190,7 +190,7 @@ function OnlineConsultationContent({ onClose }: { onClose: () => void }) {
       "Hello, I would like to book an online (video) consultation."
     );
     toast.success("Opening WhatsApp…", {
-      description: "Mention a preferred time and we'll set up your video call.",
+      description: "Mention a preferred time and I'll set up your video call.",
     });
     onClose();
   }
@@ -207,8 +207,8 @@ function OnlineConsultationContent({ onClose }: { onClose: () => void }) {
           <Icon name="Video" className="h-4 w-4 text-teal" /> How it works
         </h4>
         <ol className="ml-4 list-decimal space-y-1.5 text-sm text-muted-foreground">
-          <li>Send us a message on WhatsApp using the button below.</li>
-          <li>We confirm your slot and share a secure video link.</li>
+          <li>Send me a message on WhatsApp using the button below.</li>
+          <li>I'll confirm your slot and share a secure video link.</li>
           <li>Join a few minutes early from a quiet, private space.</li>
           <li>Have your medications and questions handy.</li>
         </ol>
@@ -252,7 +252,7 @@ function EnquiryForm({ onClose }: { onClose: () => void }) {
     const message = form.message.trim();
     if (name.length < 2) return toast.error("Please enter your name.");
     if (phone.length < 7) return toast.error("Please enter a valid phone number.");
-    if (message.length < 5) return toast.error("Please tell us how we can help.");
+    if (message.length < 5) return toast.error("Please tell me how I can help.");
 
     const text = [
       "Hello, I have a general enquiry.",
@@ -273,7 +273,7 @@ function EnquiryForm({ onClose }: { onClose: () => void }) {
   return (
     <form onSubmit={submit} className="grid gap-4">
       <div className="rounded-2xl border border-sage/30 bg-sage/10 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
-        Share your question and we&apos;ll continue the conversation on WhatsApp.
+        Share your question and I&apos;ll continue the conversation on WhatsApp.
       </div>
       <Field label="Name" required>
         <Input
@@ -294,7 +294,7 @@ function EnquiryForm({ onClose }: { onClose: () => void }) {
         <Textarea
           value={form.message}
           onChange={(e) => set("message", e.target.value)}
-          placeholder="How can we help?"
+          placeholder="How can I help?"
           rows={4}
         />
       </Field>
@@ -312,7 +312,7 @@ function WhatsAppModal({ open, onClose }: { open: boolean; onClose: () => void }
   const options = [
     {
       label: "Book Appointment",
-      desc: "Start your first consultation with us.",
+      desc: "Start your first consultation with me.",
       message: whatsappMessages.newAppointment,
       icon: "CalendarPlus" as const,
     },
@@ -330,7 +330,7 @@ function WhatsAppModal({ open, onClose }: { open: boolean; onClose: () => void }
     },
     {
       label: "General Enquiry",
-      desc: "Anything else we can help with.",
+      desc: "Anything else I can help with.",
       message: whatsappMessages.general,
       icon: "MessageCircleQuestion" as const,
     },
@@ -346,10 +346,10 @@ function WhatsAppModal({ open, onClose }: { open: boolean; onClose: () => void }
             </div>
             <div>
               <DialogTitle className="font-serif text-xl text-foreground">
-                How can we help you today?
+                How can I help you today?
               </DialogTitle>
               <DialogDescription className="text-muted-foreground">
-                Choose an option — we'll open WhatsApp with a ready message.
+                Choose an option — I'll open WhatsApp with a ready message.
               </DialogDescription>
             </div>
           </div>
@@ -378,7 +378,7 @@ function WhatsAppModal({ open, onClose }: { open: boolean; onClose: () => void }
             </a>
           ))}
           <p className="pt-1 text-center text-xs text-muted-foreground">
-            Or call us at{" "}
+            Or call me at{" "}
             <a href={`tel:${contact.phoneDial}`} className="font-medium text-teal">
               {contact.phoneDisplay}
             </a>
@@ -398,11 +398,11 @@ const bookingMeta: Record<
   new: {
     title: "New Appointment",
     description:
-      "Share a few details and we'll open WhatsApp with a ready message for the clinic.",
+      "Share a few details and I'll open WhatsApp with a ready message for the clinic.",
   },
   followup: {
     title: "Follow-up Appointment",
-    description: "Welcome back. We'll continue your care on WhatsApp.",
+    description: "Welcome back. I'll continue your care on WhatsApp.",
   },
   online: {
     title: "Online Consultation",
@@ -410,7 +410,7 @@ const bookingMeta: Record<
   },
   enquiry: {
     title: "General Enquiry",
-    description: "Have a question? We'll send it to the clinic on WhatsApp.",
+    description: "Have a question? I'll send it to the clinic on WhatsApp.",
   },
 };
 

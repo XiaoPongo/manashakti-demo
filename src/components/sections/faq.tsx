@@ -17,13 +17,13 @@ import { faqs } from "@/lib/clinic-data";
 import { cn } from "@/lib/utils";
 
 export function FAQ() {
-  const { openBooking, openWhatsApp } = useBooking();
+  const { openWhatsApp } = useBooking();
 
   return (
     <Section id="faq" className="bg-muted/30">
       <SectionHeading
         eyebrow="FAQ"
-        title="Questions we hear often"
+        title="Questions I hear often"
         description="Clear answers to help you feel prepared."
       />
 
@@ -62,28 +62,17 @@ export function FAQ() {
             Still have questions?
           </h3>
           <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-            We&apos;re here to help however we can — reach out in whatever way
+            I&apos;m here to help however I can — reach out in whatever way
             feels comfortable for you.
           </p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-12 rounded-full border-sage/50 bg-background px-6 text-base text-foreground hover:border-teal hover:bg-sage/15 hover:text-teal"
-              onClick={() => openWhatsApp()}
-            >
-              <Icon name="MessageCircle" className="h-5 w-5" aria-hidden />
-              Ask on WhatsApp
-            </Button>
-            <Button
-              size="lg"
-              className="h-12 rounded-full px-6 text-base shadow-soft"
-              onClick={() => openBooking("enquiry")}
-            >
-              <Icon name="Send" className="h-5 w-5" aria-hidden />
-              Send an enquiry
-            </Button>
-          </div>
+          <Button
+            size="lg"
+            className="h-12 rounded-full bg-[#1da851] px-6 text-base text-white shadow-soft hover:bg-[#198f47]"
+            onClick={() => openWhatsApp()}
+          >
+            <Icon name="MessageCircle" className="h-5 w-5" aria-hidden />
+            Ask on WhatsApp
+          </Button>
         </div>
       </FadeUp>
     </Section>

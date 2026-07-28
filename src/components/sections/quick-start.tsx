@@ -45,8 +45,8 @@ export function QuickStart() {
     <Section id="quick-start" className="bg-background">
       <SectionHeading
         eyebrow="Quick Start"
-        title="How can we help today?"
-        description="Choose the option that fits — we'll guide you from there."
+        title="How can I help you today?"
+        description="Choose the option that fits — I'll guide you from there."
       />
 
       <Stagger

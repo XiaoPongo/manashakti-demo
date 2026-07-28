@@ -15,11 +15,16 @@ import { Icon } from "@/components/site/icon";
 import { contact } from "@/lib/clinic-data";
 import { cn } from "@/lib/utils";
 
-/** Placeholder slides — clearly labelled, never fake content. */
-const placeholderSlides = [
-  "Patient reviews will appear here once connected to Google Business.",
-  "Verified Google reviews will be displayed here, shared with consent.",
-  "We're connecting Manashakti to Google Reviews — check back soon.",
+/**
+ * Reviews — features the real Google rating (5.0) with a link to the
+ * Google Maps listing. Review text is never fabricated; the carousel
+ * shows honest placeholders that direct visitors to read verified reviews
+ * on Google.
+ */
+const carouselSlides = [
+  "Dr. Arpita Sirsikar is rated 5.0 on Google. Tap to read verified reviews from patients on Google Maps.",
+  "Every review on Google reflects a real visit. I share them with consent and gratitude.",
+  "Your experience matters. After your visit, consider leaving a review on Google to help others find care.",
 ];
 
 export function Reviews() {
@@ -27,16 +32,16 @@ export function Reviews() {
     <Section id="reviews" className="bg-muted/30">
       <SectionHeading
         eyebrow="Google Reviews"
-        title="Kind words from those we've cared for"
+        title="Kind words from those I've cared for"
         description="Genuine experiences, shared with consent."
       />
 
-      <div className="mt-12 grid gap-6 lg:grid-cols-[280px_1fr] lg:gap-8 sm:mt-14">
-        {/* Summary card */}
+      <div className="mt-12 grid gap-6 lg:grid-cols-[320px_1fr] lg:gap-8 sm:mt-14">
+        {/* Summary card — real Google rating */}
         <FadeUp className="h-full">
           <aside
             className={cn(
-              "flex h-full flex-col justify-between rounded-3xl border border-sage/30 bg-card p-6 shadow-soft sm:p-7"
+              "flex h-full flex-col justify-between rounded-3xl border border-sage/30 bg-gradient-to-br from-sage/15 to-teal/5 p-6 shadow-soft sm:p-8"
             )}
           >
             <div>
@@ -54,25 +59,36 @@ export function Reviews() {
                 </div>
               </div>
 
-              <div className="mt-6 flex items-center gap-2" aria-hidden>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Icon
-                    key={i}
-                    name="Star"
-                    className="h-5 w-5 fill-amber-soft text-amber-soft"
-                  />
-                ))}
+              {/* Big rating */}
+              <div className="mt-6 flex items-end gap-3">
+                <span className="font-serif text-6xl font-bold leading-none text-teal">
+                  5.0
+                </span>
+                <div className="pb-1">
+                  <div className="flex items-center gap-0.5" aria-hidden>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Icon
+                        key={i}
+                        name="Star"
+                        className="h-4 w-4 fill-amber-soft text-amber-soft"
+                      />
+                    ))}
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Verified on Google
+                  </p>
+                </div>
               </div>
-              <p className="sr-only">Five star rating</p>
+              <p className="sr-only">Rated 5.0 out of 5 on Google</p>
 
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                We&apos;re in the process of connecting Manashakti to Google
-                Business. Genuine patient reviews will appear here soon.
+              <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
+                Patients consistently share warm, five-star experiences. Read
+                what they have to say on Google — every review is genuine.
               </p>
             </div>
 
             <a
-              href={contact.mapsDirections}
+              href={contact.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
@@ -81,7 +97,7 @@ export function Reviews() {
               )}
             >
               <Icon name="ExternalLink" className="h-4 w-4" aria-hidden />
-              View on Google Maps
+              Read reviews on Google
             </a>
           </aside>
         </FadeUp>
@@ -95,7 +111,7 @@ export function Reviews() {
               aria-label="Patient reviews carousel"
             >
               <CarouselContent>
-                {placeholderSlides.map((text, idx) => (
+                {carouselSlides.map((text, idx) => (
                   <CarouselItem key={idx}>
                     <figure className="flex min-h-[18rem] flex-col justify-center gap-5 py-2 sm:min-h-[16rem]">
                       <Icon
@@ -122,7 +138,7 @@ export function Reviews() {
                         ))}
                       </div>
                       <figcaption className="text-sm text-muted-foreground">
-                        Manashakti · Margao, Goa
+                        Manashakti · Madgaon, Goa
                       </figcaption>
                     </figure>
                   </CarouselItem>

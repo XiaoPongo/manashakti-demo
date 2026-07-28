@@ -279,3 +279,30 @@ Stage Summary:
 - Site is now WhatsApp-first (all booking flows open WhatsApp with tailored messages), leaner (removed 4 sections), visually richer (mindmap), and 100% static — hostable on GitHub Pages.
 - Files changed: next.config.ts, package.json, booking-modals.tsx, ai-assistant.tsx, when-to-seek-help.tsx, logo.tsx, about-doctor.tsx, manashakti-shell.tsx. Added .github/workflows/deploy.yml. Deleted: services.tsx, booking.tsx, resources.tsx, payments.tsx, src/app/api/*.
 - lint clean; dev server 200; static build produces out/index.html.
+
+---
+Task ID: 6
+Agent: orchestrator (main) — UI refinements per user feedback
+Task: Navbar logo-only, remove language selector, merge WhatsApp+Book buttons, remove FAQ enquiry button, first-person voice, footer cleanup, interior photos, reviews update, address update
+
+Work Log:
+- Scraped Google Maps for the clinic's Google Business Profile: found UPDATED address (1st Floor, Costa Towers, Shop No. 105–106, Opp. Gaylin Restaurant, Pajifond, Madgaon, Goa 403601) and 5.0 Google rating. The clinic has moved from the old Almeida's Clinic location.
+- Generated 3 calming clinic interior photos via image-generation skill (waiting area, consultation room, reception), converted to proper PNG with sharp.
+- Navbar: logo-only (big, no wordmark, imgSize 44, md:scale-110), removed LanguageSelector import + usage, merged WhatsApp+Book into single "Book on WhatsApp" teal button (opens WhatsApp modal). Mobile menu also updated to single button.
+- FAQ: removed "Send an enquiry" button, kept "Ask on WhatsApp" (WhatsApp-green). Changed "We're here to help" → "I'm here to help".
+- First-person voice ("we/us/our" → "I/me/my") across: hero supporting text, doctor bio, quick-start headings+descriptions, booking form helper text, WhatsApp modal, AI assistant footer, FAQ title, privacy section, testimonials note, reviews carousel, contact section headings/labels, clinic-info labels.
+- Footer: removed Book Appointment button, WhatsApp button, and Services column. Now 3 columns: Quick Links, Contact, Working Hours. Big logo-only at top (imgSize 56).
+- Reviews: updated to feature real 5.0 Google rating prominently (big teal "5.0" + 5 stars + "Verified on Google"), "Read reviews on Google" link to googleMapsUrl. Honest carousel placeholders direct to Google.
+- Address: updated in clinic-data.ts (Costa Towers, Pajifond), mapsEmbed + mapsDirections + parking text updated. Old "Almeida's/Baboy Commerce Center" address fully removed.
+- New ClinicGallery section: editorial 3-photo grid (waiting area, consultation room, reception) with captions and hover zoom. Added between AboutDoctor and WhenToSeekHelp. Labeled "Illustrative renders of the clinic atmosphere".
+- Logo component: added imgSize prop for flexible sizing.
+- Verification (agent-browser + VLM): navbar shows logo-only (no wordmark), no language selector, single "Book on WhatsApp" button; gallery has 3 photos (VLM confirms calm/professional); reviews shows 5.0 + "Read reviews on Google"; address is Costa Towers/Pajifond/Madgaon (no old address); FAQ has no "Send an enquiry"; first-person voice confirmed across hero/bio/quick-start/FAQ/contact/privacy; footer has 3 columns (no Book/WhatsApp/Services); mobile menu has no language selector. No console errors/warnings. Lint clean.
+
+Stage Summary:
+- Navbar is now logo-only (big & bold), single WhatsApp CTA, no language selector.
+- All booking flows route through WhatsApp (first-person, personal voice).
+- Footer is lean (Quick Links, Contact, Hours).
+- New interior photo gallery with 3 calming renders.
+- Reviews feature real 5.0 Google rating.
+- Address updated to Costa Towers, Pajifond, Madgaon (from Google Maps).
+- Lint clean; dev server 200; no errors.

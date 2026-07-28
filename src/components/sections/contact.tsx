@@ -29,7 +29,7 @@ export function Contact() {
     {
       icon: "Phone",
       accent: "teal",
-      label: "Call us",
+      label: "Call me",
       value: contact.phoneDisplay,
       ctaLabel: "Call now",
       ctaHref: `tel:${contact.phoneDial}`,
@@ -45,7 +45,7 @@ export function Contact() {
     {
       icon: "Mail",
       accent: "teal",
-      label: "Email us",
+      label: "Email me",
       value: contact.email,
       ctaLabel: "Send email",
       ctaHref: `mailto:${contact.email}`,
@@ -56,8 +56,8 @@ export function Contact() {
     <Section id="contact" className="bg-background">
       <SectionHeading
         eyebrow="Contact"
-        title="Reach out to us today"
-        description="We're here to listen — by phone, WhatsApp, or email."
+        title="Reach out to me today"
+        description="I'm here to listen — by phone, WhatsApp, or email."
       />
 
       <Stagger className="mt-12 grid gap-5 md:grid-cols-3" stagger={0.1}>
@@ -124,7 +124,7 @@ export function Contact() {
             </span>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Visit our clinic
+                Visit the clinic
               </p>
               <p className="mt-0.5 text-sm text-foreground sm:text-base">
                 {contact.address.full}
@@ -142,7 +142,7 @@ export function Contact() {
               href={contact.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Follow us on Instagram ${contact.instagramHandle} (opens in a new tab)`}
+              aria-label={`Follow on Instagram ${contact.instagramHandle} (opens in a new tab)`}
             >
               <Icon name="Instagram" className="h-4 w-4 text-teal" />
               {contact.instagramHandle}

@@ -17,7 +17,6 @@ import { Icon } from "@/components/site/icon";
 import { Logo } from "@/components/site/logo";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 import { AccessibilityPanel } from "@/components/site/accessibility-panel";
-import { LanguageSelector } from "@/components/site/language-selector";
 import { useBooking } from "@/components/site/booking-context";
 import { navLinks } from "@/lib/clinic-data";
 import { cn } from "@/lib/utils";
@@ -31,7 +30,7 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { openBooking, openWhatsApp } = useBooking();
+  const { openWhatsApp } = useBooking();
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -48,13 +47,13 @@ export function Navbar() {
       )}
     >
       <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-5 sm:px-8 md:h-20">
-        {/* Left: Logo */}
+        {/* Left: Logo — big & bold, image only */}
         <Link
           href="#home"
           aria-label="Manashakti — back to top"
           className="flex shrink-0 items-center"
         >
-          <Logo priority />
+          <Logo priority showWordmark={false} imgSize={44} className="md:scale-110 md:origin-left" />
         </Link>
 
         {/* Center: desktop nav links */}
@@ -76,21 +75,12 @@ export function Navbar() {
         <div className="hidden items-center gap-1 lg:flex">
           <ThemeToggle />
           <AccessibilityPanel />
-          <LanguageSelector />
           <Button
-            variant="outline"
             onClick={() => openWhatsApp()}
-            className="ml-1 h-10 gap-2 rounded-full border-sage/40 px-4 text-sm font-medium text-teal hover:bg-sage/15 hover:text-teal"
+            className="ml-1 h-10 gap-2 rounded-full bg-teal px-5 text-sm font-semibold text-teal-foreground shadow-soft hover:bg-teal/90"
           >
             <Icon name="MessageCircle" className="h-4 w-4" aria-hidden />
-            WhatsApp
-          </Button>
-          <Button
-            onClick={() => openBooking("new")}
-            className="h-10 gap-2 rounded-full bg-teal px-4 text-sm font-medium text-teal-foreground shadow-soft hover:bg-teal/90"
-          >
-            <Icon name="CalendarPlus" className="h-4 w-4" aria-hidden />
-            Book Appointment
+            Book on WhatsApp
           </Button>
         </div>
 
@@ -176,27 +166,15 @@ export function Navbar() {
                 <Button
                   onClick={() => {
                     setMobileOpen(false);
-                    openBooking("new");
+                    openWhatsApp();
                   }}
                   className="h-12 w-full gap-2 rounded-2xl bg-teal text-teal-foreground shadow-soft hover:bg-teal/90"
                 >
-                  <Icon name="CalendarPlus" className="h-4 w-4" aria-hidden />
-                  Book Appointment
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    openWhatsApp();
-                  }}
-                  className="h-12 w-full gap-2 rounded-2xl border-sage/40 text-teal hover:bg-sage/15 hover:text-teal"
-                >
                   <Icon name="MessageCircle" className="h-4 w-4" aria-hidden />
-                  WhatsApp
+                  Book on WhatsApp
                 </Button>
-                <div className="flex items-center justify-between gap-2 pt-1">
+                <div className="flex items-center justify-start gap-2 pt-1">
                   <AccessibilityPanel />
-                  <LanguageSelector />
                 </div>
               </div>
             </SheetContent>

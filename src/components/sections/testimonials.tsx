@@ -66,7 +66,7 @@ export function Testimonials() {
             className="h-3.5 w-3.5 shrink-0 text-sage"
             aria-hidden
           />
-          We never publish testimonials without explicit written consent.
+          I never publish testimonials without explicit written consent.
         </p>
       </FadeUp>
     </Section>

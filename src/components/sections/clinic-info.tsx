@@ -24,7 +24,7 @@ export function ClinicInfo() {
   return (
     <Section id="clinic" className="bg-soft-sage">
       <SectionHeading
-        eyebrow="Visit Us"
+        eyebrow="Visit"
         title="Clinic information"
         description="A calm, welcoming space in the heart of Margao, Goa."
       />
@@ -145,7 +145,7 @@ export function ClinicInfo() {
                     Email
                   </span>
                   <span className="text-sm font-semibold text-foreground">
-                    Email us
+                    Email me
                   </span>
                 </span>
               </a>

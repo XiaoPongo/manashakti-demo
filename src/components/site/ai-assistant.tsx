@@ -276,7 +276,7 @@ export function AIAssistant() {
                   className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground transition-colors hover:text-teal"
                 >
                   <Icon name="Phone" className="h-3 w-3" aria-hidden />
-                  Prefer to talk? Call us
+                  Prefer to talk? Call the clinic
                 </a>
                 <span className="text-[10px] text-muted-foreground">
                   No medical advice
@@ -293,7 +293,7 @@ export function AIAssistant() {
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}
-            aria-label={open ? "Close Manu assistant" : "Ask Manu, our assistant"}
+            aria-label={open ? "Close Manu assistant" : "Ask Manu, the assistant"}
             aria-expanded={open}
             className="pointer-events-auto group relative flex h-14 w-14 items-center justify-center rounded-full bg-teal text-teal-foreground shadow-soft-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/30"
           >
@@ -339,7 +339,7 @@ export function AIAssistant() {
           </button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={10}>
-          Ask Manu, our assistant
+          Ask Manu, the assistant
         </TooltipContent>
       </Tooltip>
     </div>

@@ -35,7 +35,7 @@ export function Privacy() {
             </h3>
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-teal-foreground/85 sm:text-lg">
               Everything discussed during your consultation is treated with
-              strict confidentiality. We follow rigorous confidentiality
+              strict confidentiality. I follow rigorous confidentiality
               guidelines to ensure your privacy and comfort.
             </p>
           </div>

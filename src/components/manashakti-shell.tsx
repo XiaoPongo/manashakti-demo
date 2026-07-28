@@ -13,6 +13,7 @@ import { Hero } from "@/components/sections/hero";
 import { QuickStart } from "@/components/sections/quick-start";
 import { Trust } from "@/components/sections/trust";
 import { AboutDoctor } from "@/components/sections/about-doctor";
+import { ClinicGallery } from "@/components/sections/clinic-gallery";
 import { WhenToSeekHelp } from "@/components/sections/when-to-seek-help";
 import { HowItWorks } from "@/components/sections/how-it-works";
 import { Reviews } from "@/components/sections/reviews";
@@ -40,6 +41,7 @@ export function ManashaktiShell() {
           <QuickStart />
           <Trust />
           <AboutDoctor />
+          <ClinicGallery />
           <WhenToSeekHelp />
           <HowItWorks />
           <Reviews />

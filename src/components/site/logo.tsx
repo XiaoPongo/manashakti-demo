@@ -7,6 +7,8 @@ interface LogoProps {
   showWordmark?: boolean;
   wordmarkClassName?: string;
   priority?: boolean;
+  /** Pixel size of the logo image. Default 44 (h-11). Use 56 for the navbar. */
+  imgSize?: number;
 }
 
 /** Manashakti logo — uses the official brand asset from /public/brand.
@@ -16,16 +18,18 @@ export function Logo({
   showWordmark = true,
   wordmarkClassName,
   priority = false,
+  imgSize = 44,
 }: LogoProps) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <Image
         src="/brand/manashakti-logo.png"
         alt="Manashakti logo"
-        width={44}
-        height={44}
+        width={imgSize}
+        height={imgSize}
         priority={priority}
-        className="h-10 w-10 sm:h-11 sm:w-11 object-contain"
+        style={{ width: imgSize, height: imgSize }}
+        className="object-contain"
       />
       {showWordmark ? (
         <span

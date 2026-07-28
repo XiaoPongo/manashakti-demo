@@ -11,11 +11,11 @@ export const clinic = {
   heroSubheading:
     "Compassionate psychiatric care for children, adults and families.",
   heroSupporting:
-    "Confidential, evidence-based psychiatric care in a calm, welcoming space in Margao, Goa — personalized to your unique needs and paced for your comfort.",
+    "I offer confidential, evidence-based psychiatric care in a calm, welcoming space in Madgaon, Goa — personalized to your unique needs and paced for your comfort.",
   doctorName: "Dr. Arpita Sirsikar",
   doctorTitle: "Consultant Psychiatrist",
   doctorBio:
-    "Dr. Arpita Sirsikar is a Consultant Psychiatrist based in Margao, Goa, dedicated to providing compassionate, comprehensive psychiatric care. Her approach blends evidence-based medicine with genuine human warmth, helping each person feel heard, respected and safe. She specializes in anxiety, depression, PTSD, psychosis, OCD, dementia, addiction and stress management — supporting children, adults and families through every stage of their mental health journey.",
+    "I'm Dr. Arpita Sirsikar, a Consultant Psychiatrist based in Madgaon, Goa. My approach blends evidence-based medicine with genuine human warmth, so you feel heard, respected and safe. I specialize in anxiety, depression, PTSD, psychosis, OCD, dementia, addiction and stress management — and I support children, adults and families through every stage of their mental health journey.",
   doctorSpecialties: [
     "Anxiety Disorders",
     "Depression",
@@ -69,22 +69,27 @@ export const contact = {
   instagram: "https://www.instagram.com/mana.shakti",
   instagramHandle: "@mana.shakti",
   address: {
-    line1: "Almeida's Clinic, Baboy Commerce Center",
-    line2: "Next to Krishna Medical Stores",
-    city: "Margao",
+    line1: "1st Floor, Costa Towers, Shop No. 105–106",
+    line2: "Opp. Gaylin Restaurant, Pajifond",
+    city: "Madgaon (Margao)",
     state: "Goa",
     pincode: "403601",
     country: "India",
-    full: "Almeida's Clinic, Baboy Commerce Center, Next to Krishna Medical Stores, Margao, Goa 403601",
+    full: "1st Floor, Costa Towers, Shop No. 105–106, Opp. Gaylin Restaurant, Pajifond, Madgaon, Goa 403601",
   },
-  // Approximate coordinates for Margao, Goa
+  // Plus code from Google Maps: 7XG5+5M Madgaon, Goa
   geo: { lat: 15.2744, lng: 73.9609 },
   mapsEmbed:
-    "https://www.google.com/maps?q=Baboy%20Commerce%20Center%20Margao%20Goa%20403601&output=embed",
+    "https://www.google.com/maps?q=Costa+Towers+Pajifond+Madgaon+Goa+403601&output=embed",
   mapsDirections:
-    "https://www.google.com/maps/dir/?api=1&destination=Baboy+Commerce+Center+Margao+Goa+403601",
+    "https://www.google.com/maps/dir/?api=1&destination=Costa+Towers+Pajifond+Madgaon+Goa+403601",
   parking:
-    "Limited street parking available near Krishna Medical Stores. Paid parking available at the Margao Municipal Market, a 3-minute walk away.",
+    "Street parking is available around Costa Towers, Pajifond. Paid parking is available at the nearby Margao Municipal Market, a short walk away.",
+  // From Google Maps knowledge panel (as of 2025): 5.0 rating.
+  googleRating: 5.0,
+  googleRatingLabel: "5.0 on Google",
+  googleMapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Dr+Arpita+Sirsikar+Consultant+Psychiatrist+Madgaon+Goa",
 } as const;
 
 export const workingHours = [
@@ -383,7 +388,7 @@ export const quickStartOptions = [
   {
     key: "first",
     title: "I want my first consultation",
-    description: "New to Manashakti? Let's find a time that feels right for you.",
+    description: "New to Manashakti? I'll help you find a time that feels right.",
     icon: "Sparkles",
     accent: "sage",
     bookingKind: "new",
@@ -391,7 +396,7 @@ export const quickStartOptions = [
   {
     key: "followup",
     title: "I need a follow-up appointment",
-    description: "Already visited? Book your next step with ease.",
+    description: "Already visited? I'll help you book your next step.",
     icon: "CalendarClock",
     accent: "teal",
     bookingKind: "followup",
@@ -399,7 +404,7 @@ export const quickStartOptions = [
   {
     key: "family",
     title: "I'm booking for a family member",
-    description: "Booking on behalf of someone you care for? We'll guide you.",
+    description: "Booking for someone you care for? I'll guide you through it.",
     icon: "Users",
     accent: "sage",
     bookingKind: "new",
@@ -407,7 +412,7 @@ export const quickStartOptions = [
   {
     key: "question",
     title: "I just have a question",
-    description: "Not sure where to start? Send us a gentle enquiry.",
+    description: "Not sure where to start? Send me a gentle enquiry.",
     icon: "MessageCircleQuestion",
     accent: "teal",
     bookingKind: "enquiry",

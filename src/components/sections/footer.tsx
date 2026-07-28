@@ -3,11 +3,9 @@
 import * as React from "react";
 import { Logo } from "@/components/site/logo";
 import { Icon } from "@/components/site/icon";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { FadeIn, Stagger, StaggerItem } from "@/components/site/motion";
 import { useToast } from "@/hooks/use-toast";
-import { useBooking } from "@/components/site/booking-context";
 import {
   contact,
   workingHours,
@@ -15,21 +13,13 @@ import {
   clinic,
 } from "@/lib/clinic-data";
 
-const servicesList = [
-  "Depression",
-  "Anxiety",
-  "OCD",
-  "Addiction",
-  "Child Psychiatry",
-  "Online Consultation",
-];
-
 /**
  * Footer — premium, multi-column footer with brand, links, contact & hours.
+ * No booking/WhatsApp/service buttons — those live in the navbar and
+ * floating action bar.
  */
 export function Footer() {
   const currentYear = new Date().getFullYear();
-  const { openBooking, openWhatsApp } = useBooking();
   const { toast } = useToast();
 
   const showComingSoon = (label: string) => {
@@ -47,34 +37,14 @@ export function Footer() {
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
         {/* Top brand band */}
         <FadeIn className="py-12 sm:py-14">
-          <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+          <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-md">
-              <Logo priority={false} className="text-foreground" />
+              <Logo priority={false} imgSize={56} showWordmark={false} />
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 {clinic.doctorName}, {clinic.doctorTitle}. Compassionate,
                 evidence-based psychiatric care in a calm, welcoming space in
-                Margao, Goa — personalized to your unique needs.
+                Madgaon, Goa — personalized to your unique needs.
               </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button
-                onClick={() => openBooking("new")}
-                size="lg"
-                className="gap-2 rounded-full bg-teal px-6 text-teal-foreground hover:bg-teal/90"
-              >
-                <Icon name="CalendarPlus" className="h-4 w-4" />
-                Book Appointment
-              </Button>
-              <Button
-                onClick={() => openWhatsApp()}
-                variant="outline"
-                size="lg"
-                className="gap-2 rounded-full px-6"
-              >
-                <Icon name="MessageCircle" className="h-4 w-4 text-teal" />
-                WhatsApp
-              </Button>
             </div>
           </div>
         </FadeIn>
@@ -83,7 +53,7 @@ export function Footer() {
 
         {/* Columns */}
         <Stagger
-          className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-4"
+          className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-3"
           stagger={0.08}
         >
           {/* Quick Links */}
@@ -99,25 +69,6 @@ export function Footer() {
                     className="text-sm text-muted-foreground transition-colors hover:text-teal"
                   >
                     {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </StaggerItem>
-
-          {/* Services */}
-          <StaggerItem>
-            <h4 className="font-serif text-base font-semibold text-foreground">
-              Services
-            </h4>
-            <ul className="mt-4 space-y-2.5">
-              {servicesList.map((s) => (
-                <li key={s}>
-                  <a
-                    href="#services"
-                    className="text-sm text-muted-foreground transition-colors hover:text-teal"
-                  >
-                    {s}
                   </a>
                 </li>
               ))}
