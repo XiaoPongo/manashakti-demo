@@ -26,11 +26,13 @@ export function AboutDoctor() {
         description={clinic.doctorTitle}
       />
 
-      <div className="mt-14 grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-        {/* LEFT — portrait + floating glass card */}
+      <div className="mt-14 grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+        {/* LEFT — warm illustration + floating glass card
+            (Doctor's portrait lives only in the Hero; here we use a calming
+             care illustration so the page doesn't repeat the same photo.) */}
         <FadeUp className="relative">
-          <Parallax offset={30} className="relative">
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-md">
+          <Parallax offset={24} className="relative">
+            <div className="relative mx-auto aspect-square w-full max-w-md">
               {/* decorative blob behind */}
               <div
                 aria-hidden
@@ -43,11 +45,15 @@ export function AboutDoctor() {
 
               <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-white/40 shadow-soft-lg ring-1 ring-sage/30">
                 <Image
-                  src="/brand/dr-arpita-sirsikar.png"
-                  alt={`${clinic.doctorName}, ${clinic.doctorTitle}`}
+                  src="/brand/about-care.png"
+                  alt="Compassionate, confidential psychiatric care at Manashakti"
                   fill
                   sizes="(max-width: 1024px) 80vw, 35vw"
-                  className="object-cover object-top"
+                  className="object-cover"
+                />
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/25 to-transparent"
                 />
               </div>
 

@@ -1,0 +1,74 @@
+# Build and deploy the Manashakti static site to GitHub Pages.
+#
+# Setup:
+#   1. Push this repo to GitHub.
+#   2. In the repo: Settings → Pages → Build and deployment → Source = "GitHub Actions".
+#   3. Push to `main` — this workflow builds and deploys automatically.
+#
+# For a PROJECT page (https://<user>.github.io/<repo>/), set the repo
+# variable or env `BASE_PATH` to `/<repo>` (see the build step below).
+# For a USER/ORG page (https://<user>.github.io/), leave BASE_PATH empty.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Compute base path
+        id: basepath
+        run: |
+          # If the repo is NOT a *.github.io repo, use /<repo-name> as basePath.
+          REPO="${GITHUB_REPOSITORY##*/}"
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          if [[ "$REPO" == "$OWNER.github.io" ]]; then
+            echo "base=" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=/$REPO" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build static site
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.basepath.outputs.base }}
+        run: bun run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

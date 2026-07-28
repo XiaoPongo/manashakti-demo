@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Icon } from "@/components/site/icon";
 import { useBooking, type BookingKind } from "@/components/site/booking-context";
 import {
@@ -21,52 +20,55 @@ import {
   whatsappLink,
   whatsappMessages,
 } from "@/lib/clinic-data";
-import { cn } from "@/lib/utils";
+
+/** Open a WhatsApp deep link in a new tab. */
+function openWhatsApp(message: string) {
+  window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
+}
 
 /* ---------------- New Appointment Form ---------------- */
+/* Builds a tailored WhatsApp message — WhatsApp is the clinic's main channel. */
 
 function NewAppointmentForm({ onClose }: { onClose: () => void }) {
-  const [loading, setLoading] = React.useState(false);
   const [form, setForm] = React.useState({
     name: "",
     age: "",
     phone: "",
-    email: "",
-    preferredDate: "",
-    preferredTime: "",
-    consultationType: "clinic" as "clinic" | "online",
     reason: "",
   });
 
   const set = (k: keyof typeof form, v: string) =>
     setForm((f) => ({ ...f, [k]: v }));
 
-  async function submit(e: React.FormEvent) {
+  function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (form.name.trim().length < 2) return toast.error("Please enter your full name.");
-    if (form.phone.trim().length < 7) return toast.error("Please enter a valid phone number.");
-    setLoading(true);
-    try {
-      const res = await fetch("/api/appointments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error || "Failed");
-      toast.success("Thank you — your request has been received.", {
-        description: "We'll reach out shortly to confirm your appointment.",
-      });
-      onClose();
-    } catch {
-      toast.error("Something went wrong. Please call us or try WhatsApp.");
-    } finally {
-      setLoading(false);
-    }
+    const name = form.name.trim();
+    const phone = form.phone.trim();
+    if (name.length < 2) return toast.error("Please enter your full name.");
+    if (phone.length < 7) return toast.error("Please enter a valid phone number.");
+
+    const lines = [
+      "Hello, I would like to book a new appointment.",
+      "",
+      `Name: ${name}`,
+    ];
+    if (form.age.trim()) lines.push(`Age: ${form.age.trim()}`);
+    lines.push(`Phone: ${phone}`);
+    if (form.reason.trim()) lines.push(`Reason for visit: ${form.reason.trim()}`);
+    openWhatsApp(lines.join("\n"));
+
+    toast.success("Opening WhatsApp…", {
+      description: "Your details are ready to send. Just hit send in WhatsApp.",
+    });
+    onClose();
   }
 
   return (
     <form onSubmit={submit} className="grid gap-4">
+      <div className="rounded-2xl border border-sage/30 bg-sage/10 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+        Fill in a few details and we&apos;ll open WhatsApp with a ready message for
+        Dr. Arpita&apos;s team. You can review and send it in one tap.
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Full Name" required>
           <Input
@@ -85,51 +87,14 @@ function NewAppointmentForm({ onClose }: { onClose: () => void }) {
           />
         </Field>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Phone" required>
-          <Input
-            value={form.phone}
-            onChange={(e) => set("phone", e.target.value)}
-            placeholder="+91 ..."
-            inputMode="tel"
-            autoComplete="tel"
-          />
-        </Field>
-        <Field label="Email">
-          <Input
-            type="email"
-            value={form.email}
-            onChange={(e) => set("email", e.target.value)}
-            placeholder="you@email.com"
-            autoComplete="email"
-          />
-        </Field>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Preferred Date">
-          <Input
-            type="date"
-            value={form.preferredDate}
-            onChange={(e) => set("preferredDate", e.target.value)}
-          />
-        </Field>
-        <Field label="Preferred Time">
-          <Input
-            type="time"
-            value={form.preferredTime}
-            onChange={(e) => set("preferredTime", e.target.value)}
-          />
-        </Field>
-      </div>
-      <Field label="Consultation Type">
-        <RadioGroup
-          value={form.consultationType}
-          onValueChange={(v) => set("consultationType", v)}
-          className="grid grid-cols-2 gap-3"
-        >
-          <RadioCard value="clinic" label="Clinic Visit" icon="Building2" />
-          <RadioCard value="online" label="Online Consultation" icon="Video" />
-        </RadioGroup>
+      <Field label="Phone" required>
+        <Input
+          value={form.phone}
+          onChange={(e) => set("phone", e.target.value)}
+          placeholder="+91 ..."
+          inputMode="tel"
+          autoComplete="tel"
+        />
       </Field>
       <Field label="Reason for Visit">
         <Textarea
@@ -139,16 +104,9 @@ function NewAppointmentForm({ onClose }: { onClose: () => void }) {
           rows={3}
         />
       </Field>
-      <Button type="submit" disabled={loading} className="h-12 w-full text-base">
-        {loading ? (
-          <>
-            <Icon name="Loader2" className="mr-2 h-4 w-4 animate-spin" /> Sending...
-          </>
-        ) : (
-          <>
-            Submit Request <Icon name="ArrowRight" className="ml-2 h-4 w-4" />
-          </>
-        )}
+      <Button type="submit" className="h-12 w-full text-base bg-[#1da851] text-white hover:bg-[#198f47]">
+        <Icon name="MessageCircle" className="mr-2 h-4 w-4" />
+        Send on WhatsApp
       </Button>
     </form>
   );
@@ -157,42 +115,43 @@ function NewAppointmentForm({ onClose }: { onClose: () => void }) {
 /* ---------------- Follow-up Form ---------------- */
 
 function FollowUpForm({ onClose }: { onClose: () => void }) {
-  const [loading, setLoading] = React.useState(false);
   const [form, setForm] = React.useState({
     patientName: "",
     phone: "",
     previousVisitDate: "",
-    preferredTime: "",
   });
   const set = (k: keyof typeof form, v: string) =>
     setForm((f) => ({ ...f, [k]: v }));
 
-  async function submit(e: React.FormEvent) {
+  function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (form.patientName.trim().length < 2) return toast.error("Please enter the patient's name.");
-    if (form.phone.trim().length < 7) return toast.error("Please enter a valid phone number.");
-    setLoading(true);
-    try {
-      const res = await fetch("/api/followups", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error || "Failed");
-      toast.success("Follow-up request received.", {
-        description: "We'll confirm your next appointment soon.",
-      });
-      onClose();
-    } catch {
-      toast.error("Something went wrong. Please call us or try WhatsApp.");
-    } finally {
-      setLoading(false);
-    }
+    const patientName = form.patientName.trim();
+    const phone = form.phone.trim();
+    if (patientName.length < 2) return toast.error("Please enter the patient's name.");
+    if (phone.length < 7) return toast.error("Please enter a valid phone number.");
+
+    const lines = [
+      "Hello, I need a follow-up consultation.",
+      "",
+      `Patient name: ${patientName}`,
+      `Phone: ${phone}`,
+    ];
+    if (form.previousVisitDate.trim())
+      lines.push(`Last visit: ${form.previousVisitDate.trim()}`);
+    openWhatsApp(lines.join("\n"));
+
+    toast.success("Opening WhatsApp…", {
+      description: "Your follow-up request is ready to send.",
+    });
+    onClose();
   }
 
   return (
     <form onSubmit={submit} className="grid gap-4">
+      <div className="rounded-2xl border border-sage/30 bg-sage/10 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+        Welcome back. Share a few details and we&apos;ll continue the conversation
+        on WhatsApp.
+      </div>
       <Field label="Patient Name" required>
         <Input
           value={form.patientName}
@@ -208,32 +167,16 @@ function FollowUpForm({ onClose }: { onClose: () => void }) {
           inputMode="tel"
         />
       </Field>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Previous Visit Date">
-          <Input
-            type="date"
-            value={form.previousVisitDate}
-            onChange={(e) => set("previousVisitDate", e.target.value)}
-          />
-        </Field>
-        <Field label="Preferred Time">
-          <Input
-            type="time"
-            value={form.preferredTime}
-            onChange={(e) => set("preferredTime", e.target.value)}
-          />
-        </Field>
-      </div>
-      <Button type="submit" disabled={loading} className="h-12 w-full text-base">
-        {loading ? (
-          <>
-            <Icon name="Loader2" className="mr-2 h-4 w-4 animate-spin" /> Sending...
-          </>
-        ) : (
-          <>
-            Submit Request <Icon name="ArrowRight" className="ml-2 h-4 w-4" />
-          </>
-        )}
+      <Field label="Previous Visit Date">
+        <Input
+          type="date"
+          value={form.previousVisitDate}
+          onChange={(e) => set("previousVisitDate", e.target.value)}
+        />
+      </Field>
+      <Button type="submit" className="h-12 w-full text-base bg-[#1da851] text-white hover:bg-[#198f47]">
+        <Icon name="MessageCircle" className="mr-2 h-4 w-4" />
+        Send on WhatsApp
       </Button>
     </form>
   );
@@ -241,12 +184,22 @@ function FollowUpForm({ onClose }: { onClose: () => void }) {
 
 /* ---------------- Online Consultation ---------------- */
 
-function OnlineConsultationContent({ onBookOnline }: { onBookOnline: () => void }) {
+function OnlineConsultationContent({ onClose }: { onClose: () => void }) {
+  function bookOnline() {
+    openWhatsApp(
+      "Hello, I would like to book an online (video) consultation."
+    );
+    toast.success("Opening WhatsApp…", {
+      description: "Mention a preferred time and we'll set up your video call.",
+    });
+    onClose();
+  }
+
   return (
     <div className="grid gap-5">
       <p className="text-sm leading-relaxed text-muted-foreground">
         Online consultations bring the same professional, confidential care to the comfort of your
-        home. You'll speak with Dr. Arpita Sirsikar over a secure video call, at a time that suits
+        home. You&apos;ll speak with Dr. Arpita Sirsikar over a secure video call, at a time that suits
         you.
       </p>
       <div className="rounded-2xl border border-sage/30 bg-sage/10 p-4">
@@ -254,8 +207,8 @@ function OnlineConsultationContent({ onBookOnline }: { onBookOnline: () => void 
           <Icon name="Video" className="h-4 w-4 text-teal" /> How it works
         </h4>
         <ol className="ml-4 list-decimal space-y-1.5 text-sm text-muted-foreground">
-          <li>Book your slot using the button below.</li>
-          <li>We confirm your appointment and share a secure video link.</li>
+          <li>Send us a message on WhatsApp using the button below.</li>
+          <li>We confirm your slot and share a secure video link.</li>
           <li>Join a few minutes early from a quiet, private space.</li>
           <li>Have your medications and questions handy.</li>
         </ol>
@@ -278,8 +231,8 @@ function OnlineConsultationContent({ onBookOnline }: { onBookOnline: () => void 
           ))}
         </ul>
       </div>
-      <Button className="h-12 w-full text-base" onClick={onBookOnline}>
-        <Icon name="Video" className="mr-2 h-4 w-4" /> Book Online Consultation
+      <Button className="h-12 w-full text-base bg-[#1da851] text-white hover:bg-[#198f47]" onClick={bookOnline}>
+        <Icon name="MessageCircle" className="mr-2 h-4 w-4" /> Book on WhatsApp
       </Button>
     </div>
   );
@@ -288,38 +241,40 @@ function OnlineConsultationContent({ onBookOnline }: { onBookOnline: () => void 
 /* ---------------- General Enquiry ---------------- */
 
 function EnquiryForm({ onClose }: { onClose: () => void }) {
-  const [loading, setLoading] = React.useState(false);
   const [form, setForm] = React.useState({ name: "", phone: "", message: "" });
   const set = (k: keyof typeof form, v: string) =>
     setForm((f) => ({ ...f, [k]: v }));
 
-  async function submit(e: React.FormEvent) {
+  function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (form.name.trim().length < 2) return toast.error("Please enter your name.");
-    if (form.phone.trim().length < 7) return toast.error("Please enter a valid phone number.");
-    if (form.message.trim().length < 5) return toast.error("Please tell us how we can help.");
-    setLoading(true);
-    try {
-      const res = await fetch("/api/enquiries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error || "Failed");
-      toast.success("Thank you for reaching out.", {
-        description: "We'll get back to you shortly.",
-      });
-      onClose();
-    } catch {
-      toast.error("Something went wrong. Please call us or try WhatsApp.");
-    } finally {
-      setLoading(false);
-    }
+    const name = form.name.trim();
+    const phone = form.phone.trim();
+    const message = form.message.trim();
+    if (name.length < 2) return toast.error("Please enter your name.");
+    if (phone.length < 7) return toast.error("Please enter a valid phone number.");
+    if (message.length < 5) return toast.error("Please tell us how we can help.");
+
+    const text = [
+      "Hello, I have a general enquiry.",
+      "",
+      `Name: ${name}`,
+      `Phone: ${phone}`,
+      ``,
+      message,
+    ].join("\n");
+    openWhatsApp(text);
+
+    toast.success("Opening WhatsApp…", {
+      description: "Your message is ready to send.",
+    });
+    onClose();
   }
 
   return (
     <form onSubmit={submit} className="grid gap-4">
+      <div className="rounded-2xl border border-sage/30 bg-sage/10 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
+        Share your question and we&apos;ll continue the conversation on WhatsApp.
+      </div>
       <Field label="Name" required>
         <Input
           value={form.name}
@@ -343,16 +298,9 @@ function EnquiryForm({ onClose }: { onClose: () => void }) {
           rows={4}
         />
       </Field>
-      <Button type="submit" disabled={loading} className="h-12 w-full text-base">
-        {loading ? (
-          <>
-            <Icon name="Loader2" className="mr-2 h-4 w-4 animate-spin" /> Sending...
-          </>
-        ) : (
-          <>
-            Send Enquiry <Icon name="Send" className="ml-2 h-4 w-4" />
-          </>
-        )}
+      <Button type="submit" className="h-12 w-full text-base bg-[#1da851] text-white hover:bg-[#198f47]">
+        <Icon name="MessageCircle" className="mr-2 h-4 w-4" />
+        Send on WhatsApp
       </Button>
     </form>
   );
@@ -449,24 +397,25 @@ const bookingMeta: Record<
 > = {
   new: {
     title: "New Appointment",
-    description: "Tell us a little about yourself and we'll take care of the rest.",
+    description:
+      "Share a few details and we'll open WhatsApp with a ready message for the clinic.",
   },
   followup: {
     title: "Follow-up Appointment",
-    description: "Welcome back. Let's find your next slot.",
+    description: "Welcome back. We'll continue your care on WhatsApp.",
   },
   online: {
     title: "Online Consultation",
-    description: "Care from the comfort of home.",
+    description: "Care from the comfort of home — arranged over WhatsApp.",
   },
   enquiry: {
     title: "General Enquiry",
-    description: "Have a question? We're here to help.",
+    description: "Have a question? We'll send it to the clinic on WhatsApp.",
   },
 };
 
 export function BookingModals() {
-  const { bookingKind, closeBooking, openBooking, whatsappOpen, closeWhatsApp } = useBooking();
+  const { bookingKind, closeBooking, whatsappOpen, closeWhatsApp } = useBooking();
 
   const open = bookingKind !== null;
 
@@ -486,7 +435,7 @@ export function BookingModals() {
             {bookingKind === "new" && <NewAppointmentForm onClose={closeBooking} />}
             {bookingKind === "followup" && <FollowUpForm onClose={closeBooking} />}
             {bookingKind === "online" && (
-              <OnlineConsultationContent onBookOnline={() => openBooking("new")} />
+              <OnlineConsultationContent onClose={closeBooking} />
             )}
             {bookingKind === "enquiry" && <EnquiryForm onClose={closeBooking} />}
           </div>
@@ -498,7 +447,7 @@ export function BookingModals() {
   );
 }
 
-/* ---------------- Shared field + radio card ---------------- */
+/* ---------------- Shared field ---------------- */
 
 function Field({
   label,
@@ -516,29 +465,5 @@ function Field({
       </Label>
       {children}
     </div>
-  );
-}
-
-function RadioCard({
-  value,
-  label,
-  icon,
-}: {
-  value: string;
-  label: string;
-  icon: string;
-}) {
-  return (
-    <Label
-      htmlFor={`rc-${value}`}
-      className={cn(
-        "flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-all",
-        "hover:border-sage/50 hover:bg-sage/10 has-[:checked]:border-teal has-[:checked]:bg-teal/10 has-[:checked]:shadow-soft"
-      )}
-    >
-      <RadioGroupItem value={value} id={`rc-${value}`} />
-      <Icon name={icon} className="h-5 w-5 text-teal" />
-      <span className="text-sm font-medium">{label}</span>
-    </Label>
   );
 }

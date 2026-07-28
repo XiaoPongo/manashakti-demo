@@ -11,64 +11,81 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { contact } from "@/lib/clinic-data";
-
-interface ChatMessage {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-}
+import { contact, whatsappLink } from "@/lib/clinic-data";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const DISCLAIMER =
-  "I can answer general questions and help you book appointments. I cannot provide medical advice.";
+  "I can answer general questions and help you reach the clinic. I cannot provide medical advice.";
 
-const INITIAL_MESSAGE: ChatMessage = {
-  id: "greeting",
-  role: "assistant",
-  content:
-    "Hello, I'm Manu — the Manashakti assistant. I can help you with general questions about our services, hours and bookings. Please note: I cannot provide medical advice. How can I help you today?",
+type Topic = {
+  key: string;
+  label: string;
+  icon: string;
+  prefix: string;
 };
 
-const QUICK_PROMPTS = [
-  "How do I book?",
-  "What services do you offer?",
-  "Are online consultations available?",
-  "Is it confidential?",
+const TOPICS: Topic[] = [
+  {
+    key: "appointment",
+    label: "Book appointment",
+    icon: "CalendarPlus",
+    prefix: "Hello, I would like to book a new appointment.",
+  },
+  {
+    key: "followup",
+    label: "Follow-up",
+    icon: "CalendarClock",
+    prefix: "Hello, I need a follow-up consultation.",
+  },
+  {
+    key: "online",
+    label: "Online consult",
+    icon: "Video",
+    prefix:
+      "Hello, I would like to book an online (video) consultation.",
+  },
+  {
+    key: "medication",
+    label: "Medication query",
+    icon: "Pill",
+    prefix: "Hello, I have a medication-related question.",
+  },
+  {
+    key: "general",
+    label: "General question",
+    icon: "MessageCircleQuestion",
+    prefix: "Hello, I have a general enquiry.",
+  },
+];
+
+const SUGGESTIONS = [
+  "What are your working hours?",
+  "Do I need a referral?",
+  "Is the consultation confidential?",
+  "How long is a session?",
 ];
 
 /**
- * AIAssistant — floating "Manu" chat widget (bottom-left).
- * Connects to /api/chat. Always shows the medical disclaimer.
+ * AIAssistant — floating "Manu" helper (bottom-left).
+ * A static, privacy-first assistant: it helps you compose a message and sends
+ * it to the clinic on WhatsApp. No backend, no LLM — works on static hosting.
+ * Always shows the medical-advice disclaimer.
  */
 export function AIAssistant() {
   const [open, setOpen] = React.useState(false);
-  const [messages, setMessages] = React.useState<ChatMessage[]>([
-    INITIAL_MESSAGE,
-  ]);
-  const [input, setInput] = React.useState("");
-  const [isSending, setIsSending] = React.useState(false);
+  const [activeTopic, setActiveTopic] = React.useState<Topic>(TOPICS[4]);
+  const [message, setMessage] = React.useState("");
 
-  const scrollRef = React.useRef<HTMLDivElement>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
-  // Auto-scroll to bottom when messages change.
-  React.useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-  }, [messages, isSending]);
-
-  // Focus textarea when opened.
   React.useEffect(() => {
     if (open) {
-      const t = window.setTimeout(() => {
-        textareaRef.current?.focus();
-      }, 220);
+      const t = window.setTimeout(() => textareaRef.current?.focus(), 220);
       return () => window.clearTimeout(t);
     }
   }, [open]);
 
-  // Close on Escape.
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -78,90 +95,24 @@ export function AIAssistant() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const sendMessage = React.useCallback(
-    async (text: string) => {
-      const trimmed = text.trim();
-      if (!trimmed || isSending) return;
+  const composedMessage = React.useMemo(() => {
+    const detail = message.trim();
+    return detail ? `${activeTopic.prefix}\n\n${detail}` : activeTopic.prefix;
+  }, [activeTopic, message]);
 
-      const userMsg: ChatMessage = {
-        id: `u-${Date.now()}`,
-        role: "user",
-        content: trimmed,
-      };
-
-      const nextMessages = [...messages, userMsg];
-      setMessages(nextMessages);
-      setInput("");
-      setIsSending(true);
-
-      try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: nextMessages.map((m) => ({
-              role: m.role,
-              content: m.content,
-            })),
-          }),
-        });
-
-        if (!res.ok) {
-          throw new Error(`Chat request failed: ${res.status}`);
-        }
-
-        const data = (await res.json()) as { ok?: boolean; reply?: string };
-        const reply =
-          (data?.reply ?? "").trim().length > 0
-            ? data.reply!.trim()
-            : "I'm sorry, I couldn't quite catch that. Could you rephrase?";
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `a-${Date.now()}`,
-            role: "assistant",
-            content: reply,
-          },
-        ]);
-      } catch {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `a-${Date.now()}`,
-            role: "assistant",
-            content: `I'm having a little trouble right now. Please call us at ${contact.phoneDisplay} or message on WhatsApp, and we'll be glad to help.`,
-          },
-        ]);
-      } finally {
-        setIsSending(false);
-      }
-    },
-    [messages, isSending]
-  );
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      void sendMessage(input);
-    }
+  const sendOnWhatsApp = () => {
+    window.open(whatsappLink(composedMessage), "_blank", "noopener,noreferrer");
+    toast.success("Opening WhatsApp…", {
+      description: "Your message is ready to send — just hit send.",
+    });
+    setOpen(false);
+    setMessage("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    void sendMessage(input);
+  const applySuggestion = (s: string) => {
+    setMessage((prev) => (prev.trim() ? `${prev.trim()}\n${s}` : s));
+    textareaRef.current?.focus();
   };
-
-  const handleQuickPrompt = (prompt: string) => {
-    void sendMessage(prompt);
-  };
-
-  const resetChat = () => {
-    setMessages([INITIAL_MESSAGE]);
-    setInput("");
-  };
-
-  const showQuickPrompts = messages.length <= 1 && !isSending;
 
   return (
     <div
@@ -177,7 +128,7 @@ export function AIAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.94 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="pointer-events-auto absolute bottom-[4.5rem] left-0 flex max-h-[70vh] w-[calc(100vw-1.5rem)] max-w-[380px] flex-col overflow-hidden rounded-3xl border border-border/70 glass shadow-soft-lg sm:w-[380px]"
+            className="pointer-events-auto absolute bottom-[4.5rem] left-0 flex max-h-[78vh] w-[calc(100vw-1.5rem)] max-w-[380px] flex-col overflow-hidden rounded-3xl border border-border/70 glass shadow-soft-lg sm:w-[380px]"
             role="dialog"
             aria-label="Manu — Manashakti assistant"
             aria-modal="false"
@@ -190,7 +141,7 @@ export function AIAssistant() {
                   alt="Manu avatar"
                   width={36}
                   height={36}
-                  className="h-9 w-9 rounded-xl object-cover"
+                  className="h-9 w-9 object-contain"
                 />
                 <span
                   className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-card bg-emerald-500"
@@ -207,8 +158,11 @@ export function AIAssistant() {
               </div>
               <button
                 type="button"
-                onClick={resetChat}
-                aria-label="Reset conversation"
+                onClick={() => {
+                  setMessage("");
+                  setActiveTopic(TOPICS[4]);
+                }}
+                aria-label="Reset message"
                 className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
                 <Icon name="RefreshCw" className="h-4 w-4" />
@@ -235,67 +189,87 @@ export function AIAssistant() {
               </p>
             </div>
 
-            {/* Messages */}
-            <div
-              ref={scrollRef}
-              className="scroll-elegant flex-1 space-y-3 overflow-y-auto bg-background/40 px-3 py-4"
-              style={{ minHeight: "180px" }}
-            >
-              {messages.map((m) => (
-                <MessageBubble key={m.id} message={m} />
-              ))}
+            {/* Body */}
+            <div className="scroll-elegant flex-1 overflow-y-auto bg-background/40 px-4 py-4">
+              <p className="text-sm leading-relaxed text-foreground">
+                Hi, I&apos;m Manu. I&apos;ll help you put together a message for
+                Dr. Arpita&apos;s team on WhatsApp. Pick what you need and add
+                any details — I&apos;ll send it across in one tap.
+              </p>
 
-              {isSending ? <TypingIndicator /> : null}
+              {/* Topic chips */}
+              <div className="mt-4 flex flex-wrap gap-2">
+                {TOPICS.map((t) => (
+                  <button
+                    key={t.key}
+                    type="button"
+                    onClick={() => setActiveTopic(t)}
+                    className={cn(
+                      "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                      activeTopic.key === t.key
+                        ? "border-teal bg-teal text-teal-foreground shadow-soft"
+                        : "border-border bg-card text-foreground hover:border-teal/50 hover:bg-teal/10 hover:text-teal"
+                    )}
+                  >
+                    <Icon name={t.icon} className="h-3.5 w-3.5" aria-hidden />
+                    {t.label}
+                  </button>
+                ))}
+              </div>
 
-              {/* Quick prompts */}
-              {showQuickPrompts ? (
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {QUICK_PROMPTS.map((p) => (
+              {/* Message textarea */}
+              <div className="mt-4">
+                <Textarea
+                  ref={textareaRef}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Add details (optional)…"
+                  rows={3}
+                  aria-label="Your message details"
+                  className="resize-none rounded-2xl bg-background text-sm"
+                />
+              </div>
+
+              {/* Suggestions */}
+              <div className="mt-3">
+                <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Common questions
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {SUGGESTIONS.map((s) => (
                     <button
-                      key={p}
+                      key={s}
                       type="button"
-                      onClick={() => handleQuickPrompt(p)}
-                      className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-teal/50 hover:bg-teal/10 hover:text-teal"
+                      onClick={() => applySuggestion(s)}
+                      className="rounded-full border border-border bg-card px-3 py-1.5 text-xs text-foreground transition-colors hover:border-teal/50 hover:bg-teal/10 hover:text-teal"
                     >
-                      {p}
+                      {s}
                     </button>
                   ))}
                 </div>
-              ) : null}
-            </div>
-
-            {/* Input */}
-            <form
-              onSubmit={handleSubmit}
-              className="border-t border-border/60 bg-card/60 p-3"
-            >
-              <div className="flex items-end gap-2">
-                <Textarea
-                  ref={textareaRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Type a message…"
-                  rows={1}
-                  disabled={isSending}
-                  aria-label="Type your message"
-                  className="max-h-32 min-h-[44px] flex-1 resize-none rounded-2xl bg-background px-3 py-2.5 text-sm"
-                />
-                <Button
-                  type="submit"
-                  size="icon"
-                  disabled={!input.trim() || isSending}
-                  aria-label="Send message"
-                  className="h-11 w-11 shrink-0 rounded-2xl bg-teal text-teal-foreground hover:bg-teal/90"
-                >
-                  <Icon
-                    name={isSending ? "Loader2" : "Send"}
-                    className={`h-4 w-4 ${isSending ? "animate-spin" : ""}`}
-                  />
-                </Button>
               </div>
 
-              {/* Footer link */}
+              {/* Preview */}
+              <div className="mt-4 rounded-2xl border border-border bg-muted/40 p-3">
+                <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Preview
+                </p>
+                <p className="whitespace-pre-wrap break-words text-xs leading-relaxed text-foreground">
+                  {composedMessage}
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="border-t border-border/60 bg-card/60 p-3">
+              <Button
+                type="button"
+                onClick={sendOnWhatsApp}
+                className="h-11 w-full bg-[#1da851] text-white hover:bg-[#198f47]"
+              >
+                <Icon name="MessageCircle" className="mr-2 h-4 w-4" />
+                Send on WhatsApp
+              </Button>
               <div className="mt-2 flex items-center justify-between px-1">
                 <a
                   href={`tel:${contact.phoneDial}`}
@@ -305,10 +279,10 @@ export function AIAssistant() {
                   Prefer to talk? Call us
                 </a>
                 <span className="text-[10px] text-muted-foreground">
-                  Enter to send &middot; Shift+Enter for newline
+                  No medical advice
                 </span>
               </div>
-            </form>
+            </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -323,7 +297,6 @@ export function AIAssistant() {
             aria-expanded={open}
             className="pointer-events-auto group relative flex h-14 w-14 items-center justify-center rounded-full bg-teal text-teal-foreground shadow-soft-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-teal/30"
           >
-            {/* Pulsing ring */}
             {!open ? (
               <span
                 aria-hidden
@@ -355,7 +328,6 @@ export function AIAssistant() {
                 </motion.span>
               )}
             </AnimatePresence>
-            {/* AI label badge */}
             {!open ? (
               <span
                 className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-soft px-1 text-[10px] font-bold text-amber-900 ring-2 ring-card"
@@ -370,51 +342,6 @@ export function AIAssistant() {
           Ask Manu, our assistant
         </TooltipContent>
       </Tooltip>
-    </div>
-  );
-}
-
-/** Single chat message bubble. */
-function MessageBubble({ message }: { message: ChatMessage }) {
-  const isUser = message.role === "user";
-  return (
-    <div
-      className={`flex w-full ${isUser ? "justify-end" : "justify-start"}`}
-    >
-      <div
-        className={`max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm ${
-          isUser
-            ? "rounded-br-md bg-teal text-teal-foreground"
-            : "rounded-bl-md bg-card text-foreground ring-1 ring-border/60"
-        }`}
-      >
-        {message.content}
-      </div>
-    </div>
-  );
-}
-
-/** Three-dot typing indicator. */
-function TypingIndicator() {
-  return (
-    <div className="flex justify-start">
-      <div className="flex items-center gap-1 rounded-2xl rounded-bl-md bg-card px-3.5 py-3 ring-1 ring-border/60">
-        {[0, 1, 2].map((i) => (
-          <motion.span
-            key={i}
-            className="h-1.5 w-1.5 rounded-full bg-muted-foreground/60"
-            animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
-            transition={{
-              duration: 1,
-              repeat: Infinity,
-              delay: i * 0.15,
-              ease: "easeInOut",
-            }}
-            aria-hidden
-          />
-        ))}
-        <span className="sr-only">Manu is typing</span>
-      </div>
     </div>
   );
 }

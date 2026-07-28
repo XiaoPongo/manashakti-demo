@@ -13,15 +13,11 @@ import { Hero } from "@/components/sections/hero";
 import { QuickStart } from "@/components/sections/quick-start";
 import { Trust } from "@/components/sections/trust";
 import { AboutDoctor } from "@/components/sections/about-doctor";
-import { Services } from "@/components/sections/services";
 import { WhenToSeekHelp } from "@/components/sections/when-to-seek-help";
 import { HowItWorks } from "@/components/sections/how-it-works";
-import { Booking } from "@/components/sections/booking";
-import { Resources } from "@/components/sections/resources";
 import { Reviews } from "@/components/sections/reviews";
 import { Testimonials } from "@/components/sections/testimonials";
 import { FAQ } from "@/components/sections/faq";
-import { Payments } from "@/components/sections/payments";
 import { ClinicInfo } from "@/components/sections/clinic-info";
 import { Privacy } from "@/components/sections/privacy";
 import { Emergency } from "@/components/sections/emergency";
@@ -44,15 +40,11 @@ export function ManashaktiShell() {
           <QuickStart />
           <Trust />
           <AboutDoctor />
-          <Services />
           <WhenToSeekHelp />
           <HowItWorks />
-          <Booking />
-          <Resources />
           <Reviews />
           <Testimonials />
           <FAQ />
-          <Payments />
           <ClinicInfo />
           <Privacy />
           <Emergency />

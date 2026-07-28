@@ -258,3 +258,24 @@ Stage Summary:
 - The complete Manashakti single-page site is live on http://localhost:3000, fully interactive, responsive, accessible, with working booking forms (persisted to SQLite via Prisma), a real LLM-backed AI assistant with mandatory medical-advice disclaimer, dark mode, accessibility controls, and all 18 content sections requested.
 - Final file count: 19 section components + 18 site primitives + 4 API routes + clinic-data + shell + page.
 - Brand assets (logo, doctor photo, about image, favicon) scraped from official manashakti.info and used throughout.
+
+---
+Task ID: 5
+Agent: orchestrator (main) — refactor per user feedback
+Task: WhatsApp-first booking forms, remove redundant sections, mindmap, logo, single photo, GitHub Pages
+
+Work Log:
+- Booking forms → WhatsApp: rewrote NewAppointment/FollowUp/Enquiry/OnlineConsultation to build tailored WhatsApp messages client-side and open wa.me links. Removed Email, Preferred Date, Preferred Time, and Consultation Type fields from the appointment form (kept Name, Age, Phone, Reason). All submit buttons now "Send on WhatsApp". Removed API route calls.
+- AI assistant → static WhatsApp composer: rewrote ai-assistant.tsx to be fully client-side (no /api/chat, no LLM backend). Now a guided message builder: pick a topic (Book/Follow-up/Online/Medication/General), add optional details, see a live preview, send on WhatsApp. Kept Manu branding + mandatory medical-advice disclaimer. Works on static hosting.
+- Mindmap "When to reach out": rewrote when-to-seek-help.tsx as a radial mindmap (desktop): central "Your well-being" node with 10 curved SVG branches to surrounding sign nodes. Mobile falls back to an elegant card grid. Kept the "Seeking help early" callout.
+- Logo: removed rounded-xl + ring-1 ring-sage/30 from Logo component; now object-contain, h-11 w-11, wordmark font-serif text-2xl font-bold. Big & bold, no circle.
+- Single doctor photo: About section now uses /brand/about-care.png (care illustration) instead of the portrait. Dr. Arpita's photo now appears only once — in the Hero.
+- Removed sections: Services, Booking cards ("How would you like to proceed"), Resources, Payments. Deleted their files. Updated manashakti-shell.tsx ordering.
+- Removed API routes: deleted src/app/api/ entirely (appointments, followups, enquiries, chat) — site is now 100% static-compatible.
+- GitHub Pages: next.config.ts → output:"export", images.unoptimized, basePath/assetPrefix from NEXT_PUBLIC_BASE_PATH, trailingSlash. Added .github/workflows/deploy.yml (auto-build+deploy, auto-detects project vs user page basePath). Fixed package.json build script (removed standalone cp). Verified `bun run build` produces out/index.html (196KB prerendered) + all brand assets.
+- Verification (agent-browser): no console errors/warnings; H1 correct; logo has no ring; doctor photo appears once; mindmap has 10 SVG branches + 10 nodes on desktop, grid on mobile; appointment form has only Name/Age/Phone/Reason + "Send on WhatsApp"; form generates correct wa.me URL with visitor details; AI assistant composer generates WhatsApp messages; mobile hamburger works. Static export build verified.
+
+Stage Summary:
+- Site is now WhatsApp-first (all booking flows open WhatsApp with tailored messages), leaner (removed 4 sections), visually richer (mindmap), and 100% static — hostable on GitHub Pages.
+- Files changed: next.config.ts, package.json, booking-modals.tsx, ai-assistant.tsx, when-to-seek-help.tsx, logo.tsx, about-doctor.tsx, manashakti-shell.tsx. Added .github/workflows/deploy.yml. Deleted: services.tsx, booking.tsx, resources.tsx, payments.tsx, src/app/api/*.
+- lint clean; dev server 200; static build produces out/index.html.

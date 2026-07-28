@@ -9,7 +9,8 @@ interface LogoProps {
   priority?: boolean;
 }
 
-/** Manashakti logo — uses the official brand asset from /public/brand. */
+/** Manashakti logo — uses the official brand asset from /public/brand.
+ *  Big & bold, no enclosing circle/frame. */
 export function Logo({
   className,
   showWordmark = true,
@@ -21,15 +22,15 @@ export function Logo({
       <Image
         src="/brand/manashakti-logo.png"
         alt="Manashakti logo"
-        width={40}
-        height={40}
+        width={44}
+        height={44}
         priority={priority}
-        className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl object-cover ring-1 ring-sage/30"
+        className="h-10 w-10 sm:h-11 sm:w-11 object-contain"
       />
       {showWordmark ? (
         <span
           className={cn(
-            "font-serif text-xl sm:text-[1.35rem] font-semibold tracking-tight text-foreground",
+            "font-serif text-xl sm:text-2xl font-bold tracking-tight text-foreground",
             wordmarkClassName
           )}
         >
