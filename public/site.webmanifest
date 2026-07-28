@@ -1,0 +1,22 @@
+{
+  "name": "Manashakti",
+  "short_name": "Manashakti",
+  "description": "Compassionate psychiatric care in Margao, Goa, led by Dr. Arpita Sirsikar.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2e6f73",
+  "icons": [
+    {
+      "src": "/brand/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/manashakti-logo.png",
+      "sizes": "1080x1080",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
