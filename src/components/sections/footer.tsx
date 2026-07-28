@@ -39,7 +39,12 @@ export function Footer() {
         <FadeIn className="py-12 sm:py-14">
           <div className="flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-md">
-              <Logo priority={false} imgSize={56} showWordmark={false} />
+              <Logo
+                priority={false}
+                imgSize={88}
+                showWordmark={false}
+                sizeClassName="h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24"
+              />
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 {clinic.doctorName}, {clinic.doctorTitle}. Compassionate,
                 evidence-based psychiatric care in a calm, welcoming space in

@@ -145,10 +145,14 @@
   }
   html {
     scroll-behavior: smooth;
+    /* Prevent horizontal scroll from decorative blobs that intentionally
+       extend beyond the viewport on small screens. */
+    overflow-x: hidden;
   }
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "ss01", "cv01";
+    overflow-x: hidden;
   }
   /* Accessibility: larger font size */
   html[data-fontsize="lg"] {

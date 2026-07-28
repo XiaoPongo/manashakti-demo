@@ -306,3 +306,24 @@ Stage Summary:
 - Reviews feature real 5.0 Google rating.
 - Address updated to Costa Towers, Pajifond, Madgaon (from Google Maps).
 - Lint clean; dev server 200; no errors.
+
+---
+Task ID: 7
+Agent: orchestrator (main) — logo 2x + mobile optimization
+Task: Make header logo 2x bigger; audit and fix mobile layout
+
+Work Log:
+- Logo 2x bigger: navbar logo now 56px (mobile) / 80px (sm) / 96px (md+), up from 44px. Desktop is ~2.2x the original size. Navbar height increased to h-20 (mobile) / h-28 (desktop) to accommodate. Footer logo also enlarged to match (16/20/24 responsive).
+- Logo component refactor: replaced imgSizeSm/imgSizeMd props with a cleaner `sizeClassName` prop (Tailwind h/w classes) for responsive sizing without inline CSS variable hacks.
+- Mobile audit (agent-browser @ 390x844): Found horizontal overflow — body scrollWidth 498px vs viewport 390px. Root cause: decorative blurred blob elements (absolute -right-24 / -right-32) in hero/about/when-to-seek-help sections intentionally extend beyond viewport.
+- Fix: added `overflow-x: hidden` to both `html` and `body` in globals.css. This clips decorative overflow without affecting vertical scroll or interactivity. Verified: window.innerWidth=390, scrollX stays 0, no horizontal scrollbar, no section reports overflow.
+- Mobile menu verified: opens correctly with all 7 nav links + "Book on WhatsApp" button + Accessibility panel. No language selector.
+- VLM verification: mobile navbar/hero/gallery all confirmed clean — no overflow, readable text, properly stacked buttons, good touch targets.
+- Desktop verified: logo 96px (86% of 112px navbar height — prominent), no overflow, all 200 responses.
+- Remaining benign warning: next-themes hydration mismatch (standard, suppressHydrationWarning on <html> already present) + LCP info for hero image.
+
+Stage Summary:
+- Header logo is now ~2x bigger (96px desktop / 56px mobile).
+- Mobile horizontal overflow fixed via overflow-x:hidden on html+body.
+- Mobile layout verified clean across all sections (navbar, hero, quick-start, about, gallery, mindmap grid fallback, reviews, FAQ, contact, footer, mobile menu).
+- Lint clean; dev server 200; no errors.

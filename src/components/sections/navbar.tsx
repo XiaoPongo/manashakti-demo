@@ -46,14 +46,19 @@ export function Navbar() {
         scrolled ? "glass shadow-soft" : "bg-transparent"
       )}
     >
-      <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-3 px-5 sm:px-8 md:h-20">
-        {/* Left: Logo — big & bold, image only */}
+      <nav className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between gap-3 px-5 sm:px-8 md:h-28">
+        {/* Left: Logo — big & bold, image only (2x size) */}
         <Link
           href="#home"
           aria-label="Manashakti — back to top"
           className="flex shrink-0 items-center"
         >
-          <Logo priority showWordmark={false} imgSize={44} className="md:scale-110 md:origin-left" />
+          <Logo
+            priority
+            showWordmark={false}
+            imgSize={88}
+            sizeClassName="h-14 w-14 sm:h-20 sm:w-20 md:h-24 md:w-24"
+          />
         </Link>
 
         {/* Center: desktop nav links */}
