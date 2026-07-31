@@ -7,26 +7,28 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { FadeUp, Stagger, StaggerItem } from "@/components/site/motion";
 import { Icon } from "@/components/site/icon";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 const photos = [
   {
-    src: "/brand/clinic-interior-1.png",
+    src: `${basePath}/brand/clinic-interior-1.png`,
     alt: "Calming waiting area at Manashakti clinic with warm natural light and comfortable seating",
     caption: "A calm space to settle in",
     span: "lg:col-span-2 lg:row-span-2",
   },
   {
-    src: "/brand/clinic-interior-2.png",
+    src: `${basePath}/brand/clinic-interior-2.png`,
     alt: "Tranquil consultation room with sage green accents and soft lighting at Manashakti",
     caption: "Where we talk, together",
     span: "",
   },
   {
-    src: "/brand/clinic-interior-3.png",
+    src: `${basePath}/brand/clinic-interior-3.png`,
     alt: "Welcoming reception area at Manashakti with teal accents and natural materials",
     caption: "A warm welcome",
     span: "",
   },
-] as const;
+];
 
 /**
  * ClinicGallery — a calm, editorial photo grid of the clinic's interior.

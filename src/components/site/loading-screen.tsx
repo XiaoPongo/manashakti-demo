@@ -63,7 +63,7 @@ export function LoadingScreen() {
             >
               <div className="animate-breathe">
                 <Image
-                  src="/brand/manashakti-logo.png"
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/manashakti-logo.png`}
                   alt=""
                   width={64}
                   height={64}

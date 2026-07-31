@@ -45,7 +45,7 @@ export function AboutDoctor() {
 
               <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-white/40 shadow-soft-lg ring-1 ring-sage/30">
                 <Image
-                  src="/brand/about-care.png"
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/about-care.png`}
                   alt="Compassionate, confidential psychiatric care at Manashakti"
                   fill
                   sizes="(max-width: 1024px) 80vw, 35vw"

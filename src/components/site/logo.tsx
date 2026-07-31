@@ -26,7 +26,7 @@ export function Logo({
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <Image
-        src="/brand/manashakti-logo.png"
+        src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/manashakti-logo.png`}
         alt="Manashakti logo"
         width={imgSize}
         height={imgSize}

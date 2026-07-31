@@ -137,7 +137,7 @@ export function AIAssistant() {
             <div className="flex items-center gap-3 border-b border-border/60 bg-teal/10 px-4 py-3.5">
               <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-teal/15 ring-1 ring-teal/20">
                 <Image
-                  src="/brand/manashakti-logo.png"
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/manashakti-logo.png`}
                   alt="Manu avatar"
                   width={36}
                   height={36}

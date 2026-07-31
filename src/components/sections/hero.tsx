@@ -154,7 +154,7 @@ export function Hero() {
             {/* Photo frame */}
             <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-white/40 shadow-soft-lg ring-1 ring-sage/30">
               <Image
-                src="/brand/dr-arpita-sirsikar.png"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/dr-arpita-sirsikar.png`}
                 alt="Dr. Arpita Sirsikar, Consultant Psychiatrist at Manashakti, Margao, Goa"
                 fill
                 priority

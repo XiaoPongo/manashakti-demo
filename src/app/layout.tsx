@@ -49,13 +49,14 @@ export const metadata: Metadata = {
   category: "Health",
   alternates: {
     canonical: "/",
-icons: {
-  icon: [
-    { url: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/favicon.png`, type: "image/png" },
-    { url: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/manashakti-logo.png`, type: "image/png", sizes: "1080x1080" },
-  ],
-  apple: [{ url: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/manashakti-logo.png` }],
-},
+  },
+  icons: {
+    icon: [
+      { url: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/favicon.png`, type: "image/png" },
+      { url: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/manashakti-logo.png`, type: "image/png", sizes: "1080x1080" },
+    ],
+    apple: [{ url: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/manashakti-logo.png` }],
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",
